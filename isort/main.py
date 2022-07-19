@@ -513,6 +513,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     output_group.add_argument(
         "--lai", "--lines-after-imports", dest="lines_after_imports", type=int
     )
+    output_group.add_argument("--skip-multiline", dest="skip_multiline", action="store_true")
     output_group.add_argument(
         "--lbt", "--lines-between-types", dest="lines_between_types", type=int
     )
@@ -932,6 +933,8 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
 
     parser = _build_arg_parser()
     arguments = {key: value for key, value in vars(parser.parse_args(argv)).items() if value}
+    if arguments.get("skip_multiline"):
+        arguments["lines_after_imports"] = 0
     if remapped_deprecated_args:
         arguments["remapped_deprecated_args"] = remapped_deprecated_args
     if "dont_order_by_type" in arguments:

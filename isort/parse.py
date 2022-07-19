@@ -59,6 +59,8 @@ def import_type(line: str, config: Config = DEFAULT_CONFIG) -> Optional[str]:
     if line.startswith(("import ", "cimport ")):
         return "straight"
     if line.startswith("from "):
+        if line.endswith("\\") or " import (" in line:
+            return None
         return "from"
     return None
 

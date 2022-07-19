@@ -154,6 +154,7 @@ def process(
                 )
                 line_index += output_stream.write(sorted_code)
         else:
+            skip_multiline = False
             stripped_line = line.strip()
             if stripped_line and not line_separator:
                 line_separator = line[len(line.rstrip()) :].replace(" ", "").replace("\t", "")
@@ -295,6 +296,7 @@ def process(
                     while stripped_line.endswith("\\") or (
                         "(" in stripped_line and ")" not in stripped_line
                     ):
+                        skip_multiline = True
                         if stripped_line.endswith("\\"):
                             while stripped_line and stripped_line.endswith("\\"):
                                 line = input_stream.readline()
@@ -309,6 +311,8 @@ def process(
 
                                 stripped_line = line.strip().split("#")[0]
                                 import_statement += line
+                    if skip_multiline and config.skip_multiline:
+                        not_imports = True
 
                     if (
                         import_statement.lstrip().startswith("from")
@@ -396,7 +400,7 @@ def process(
                     contains_imports = True
                     add_imports = []
 
-                if not indent:
+                if not indent and not (skip_multiline and config.skip_multiline):
                     import_section += line
                     raw_import_section += line
                 if not contains_imports:

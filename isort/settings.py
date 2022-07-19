@@ -182,6 +182,7 @@ class _Config:
     atomic: bool = False
     lines_before_imports: int = -1
     lines_after_imports: int = -1
+    skip_multiline: bool = False
     lines_between_sections: int = 1
     lines_between_types: int = 0
     combine_as_imports: bool = False
